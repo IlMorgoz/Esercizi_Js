@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,td,tr,table,tbody
+        {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <form id="form">
+        <table>
+            <tbody>
+                <tr>
+                    <td><input type="text" id="identificativo" placeholder="ID studente"></td>
+                    <td><input type="number" id="frequenza" placeholder="Ore di frequenza" min="0"></td>
+                </tr>
+                <tr>
+                    <td><button type="button" onclick="Aggiunta_Iscrizione()">Aggiungi Iscrizione</button></td>
+                    <td><button type="button" onclick="Genera_Tabella()">Risultato</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <div id="risultato"></div>
+    <script>
+        let tabella="",primo=true,subtotale=0
+        let studenti=[]
+        function Aggiunta_Iscrizione()
+        {
+            let id,ore
+            let check=true
+            id=document.getElementById("identificativo").value
+            ore=Number(document.getElementById("frequenza").value)
+            if(id==="")
+            {
+                alert("Inserire un id prima di procedere")
+                check=false
+            }
+                
+            if(ore<=0||ore==undefined)
+            {
+                alert("Inserire un valore corretto prima di procedere")
+                check=false
+            }
+            
+            function calcola_importo()
+            {
+                let importo=ore*15
+                if (ore>=11&&ore<=20)
+                    importo-=(ore*15)*0.05
+                else if (ore>=21)
+                    importo-=(ore*15)*0.1
+                return importo
+            }
+            function aggiungi_studente()
+            {
+                let studente=
+                {
+                    identificativo: id,
+                    frequenza: ore,
+                    totale: calcola_importo()
+                }
+                console.log(studente)
+                studenti.push(studente)
+            }
+            if(check)
+            {
+                aggiungi_studente()
+                document.getElementById("identificativo").value=""
+                document.getElementById("frequenza").value=0
+            }
+            
+        }
+
+        function Genera_Tabella()
+        {
+            if(tabella.endsWith("</tbody></table>"))
+                tabella=tabella.replace("</tbody></table>","")
+            
+            function mostra_tabella()
+            {
+                for(let studente of studenti)
+                {
+                    inserimento="<tr><td>"+studente.identificativo+"</td><td>"+studente.frequenza+"</td><td>"+studente.totale+"</td></tr>"
+                    tabella+=inserimento
+                    if(studente.totale>200)
+                        subtotale+=studente.totale
+                }
+                tabella+="<tr><td>Totale complessivo delle iscrizioni maggiori di 200€: "+subtotale+"</td></tr></tbody></table>"
+                document.getElementById("risultato").innerHTML=tabella
+                tabella=tabella.replace("<tr><td>Totale complessivo delle iscrizioni maggiori di 200€: "+subtotale+"</td></tr></tbody></table>","")
+                studenti=[]
+            }
+            if(primo)
+            {
+                tabella="<table><tbody><tr><th>ID studente</th><th>Ore di frequenza</th><th>Quota Totale</th></tr>"
+                primo=false
+            }
+            else
+                mostra_tabella()
+        }
+    </script>
+</body>
+</html>

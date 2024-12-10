@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button type="button" onclick="Calcola()">Aggiungi Entrata</button>
+    <div id="risultato"></div>
+    <script>
+        let primo=true,valori=[]
+        function risultato()
+        {
+            let risultato=arguments[0]
+            arguments[0]=0
+            for(let valore of arguments)
+                risultato+=valore
+            document.getElementById("risultato").innerHTML="Valore di cassa: "+risultato
+            valori=[]
+            return risultato
+        }
+        function Calcola()
+        {
+            if(primo)
+            {
+                valore_cassa=Number(prompt("Inserire il valore di cassa iniziale"))
+                primo=false
+            }
+            while(true)
+            {
+                valori.push(Number(prompt("Inserisci il valore (0 per terminare)")))
+                if(valori[valori.length-1]==0)
+                    break
+            }
+            valore_cassa= risultato(valore_cassa,...valori)
+        }
+    </script>
+</body>
+</html>
